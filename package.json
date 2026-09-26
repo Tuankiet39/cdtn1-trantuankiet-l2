@@ -1,0 +1,20 @@
+{
+  "name": "hello",
+  "version": "1.0.0",
+  "description": "- **Sinh viên:** Trần Tuấn Kiệt - 2374802010263\r - **Học phần:** Chuyên đề Tốt nghiệp 1, HK1 2026-2027\r - **Track:** SE (Node.js)\r - **Luồng nghiệp vụ:** L2 - Tiếp nhận và phân loại yêu cầu bảo hành",
+  "main": "app.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
