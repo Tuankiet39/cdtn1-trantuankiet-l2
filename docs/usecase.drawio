@@ -1,0 +1,48 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="usecase-l2" name="Use Case Diagram - Order Management">
+    <mxGraphModel dx="1000" dy="600" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- System Boundary -->
+        <mxCell id="system_boundary" value="Hệ thống Quản lý Đơn hàng (OMS)" style="shape=rect;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fillColor=#ffffff;strokeColor=#000000;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="80" width="360" height="380" as="geometry" />
+        </mxCell>
+        
+        <!-- Actors -->
+        <mxCell id="actor_customer" value="Khách hàng&#10;(Customer)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="100" y="180" width="40" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="actor_manager" value="Nhân viên xử lý đơn&#10;(Order Manager)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="680" y="240" width="40" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- Use Cases -->
+        <mxCell id="uc1" value="UC1: Tạo đơn hàng" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="290" y="120" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="uc2" value="UC2: Duyệt đơn hàng" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="430" y="250" width="140" height="60" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="uc3" value="UC3: Hủy đơn hàng" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="290" y="250" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc4" value="UC4: Tra cứu danh sách đơn" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="360" y="370" width="160" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Relationships -->
+        <mxCell id="rel1" edge="1" parent="1" source="actor_customer" target="uc1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="rel2" edge="1" parent="1" source="actor_customer" target="uc3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="rel3" edge="1" parent="1" source="actor_customer" target="uc4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="rel4" edge="1" parent="1" source="actor_manager" target="uc2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="rel5" edge="1" parent="1" source="actor_manager" target="uc4"><mxGeometry relative="1" as="geometry" /></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

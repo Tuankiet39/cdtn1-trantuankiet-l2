@@ -1,0 +1,49 @@
+<mxfile host="65bd71144e">
+    <diagram id="arch-l2" name="Architecture Diagram - Order Management">
+        <mxGraphModel dx="683" dy="543" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="layer_ui" parent="1" style="swimlane;startSize=30;horizontal=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" value="Presentation Layer (Client - Web/Mobile UI)" vertex="1">
+                    <mxGeometry height="80" width="600" x="100" y="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="ui_component" parent="layer_ui" style="rect;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="Order UI Component (React/Vue)" vertex="1">
+                    <mxGeometry height="35" width="240" x="180" y="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer_api" parent="1" style="swimlane;startSize=30;horizontal=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" value="Application / API Layer (REST Controllers)" vertex="1">
+                    <mxGeometry height="80" width="600" x="100" y="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="api_component" parent="layer_api" style="rect;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="Order API Controller" vertex="1">
+                    <mxGeometry height="35" width="240" x="180" y="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer_service" parent="1" style="swimlane;startSize=30;horizontal=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" value="Business Logic Layer (Services &amp; Domain)" vertex="1">
+                    <mxGeometry height="100" width="600" x="100" y="320" as="geometry"/>
+                </mxCell>
+                <mxCell id="srv_order" parent="layer_service" style="rect;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="Order Service" vertex="1">
+                    <mxGeometry height="40" width="180" x="80" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="srv_stock" parent="layer_service" style="rect;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="Stock/Inventory Service" vertex="1">
+                    <mxGeometry height="40" width="180" x="340" y="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="layer_data" parent="1" style="swimlane;startSize=30;horizontal=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" value="Data Layer (Persistence &amp; Cache)" vertex="1">
+                    <mxGeometry height="100" width="600" x="100" y="450" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_sql" parent="layer_data" style="shape=datastore;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="PostgreSQL / MySQL&#xa;(Orders, OrderItems)" vertex="1">
+                    <mxGeometry height="50" width="160" x="120" y="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="db_cache" parent="layer_data" style="shape=datastore;whiteSpace=wrap;html=1;fillColor=#ffffff;" value="Redis Cache&#xa;(Stock Check - NFR1)" vertex="1">
+                    <mxGeometry height="50" width="160" x="360" y="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="a1" edge="1" parent="1" source="layer_ui" target="layer_api">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a2" edge="1" parent="1" source="layer_api" target="layer_service">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="a3" edge="1" parent="1" source="layer_service" target="layer_data">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
