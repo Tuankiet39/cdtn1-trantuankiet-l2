@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mekong Mobile - Tiếp nhận & Phân loại Bảo hành</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        h2 { color: #333; text-align: center; }
+        .status-box { padding: 15px; border-radius: 5px; margin-top: 15px; font-weight: bold; text-align: center; }
+        .loading { background-color: #e2e3e5; color: #383d41; }
+        .empty { background-color: #fff3cd; color: #856404; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        button { padding: 8px 16px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        button:hover { background-color: #0056b3; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #007bff; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>HỆ THỐNG TIẾP NHẬN & PHÂN LOẠI BẢO HÀNH (MEKONG MOBILE)</h2>
+        <div>
+            <input type="text" id="searchInput" placeholder="Nhập mã phiếu hoặc số serial..." style="padding: 8px; width: 60%;">
+            <button onclick="fetchTickets()">Tìm kiếm</button>
+        </div>
+
+        <!-- 3 TRẠNG THÁI UI -->
+        <div id="loadingState" class="status-box loading" style="display: none;">
+            🔄 Đang tải danh sách phiếu bảo hành...
+        </div>
+
+        <div id="emptyState" class="status-box empty" style="display: none;">
+            📭 Không tìm thấy phiếu bảo hành nào phù hợp trong hệ thống.
+        </div>
+
+        <div id="errorState" class="status-box error" style="display: none;">
+            ❌ Lỗi kết nối đến máy chủ! Vui lòng kiểm tra lại kết nối backend. <br>
+            <button onclick="fetchTickets()">Thử lại</button>
+        </div>
+
+        <!-- BẢNG DỮ LIỆU -->
+        <table id="ticketTable" style="display: none;">
+            <thead>
+                <tr>
+                    <th>Mã phiếu</th>
+                    <th>Tên khách hàng</th>
+                    <th>Mã Serial</th>
+                    <th>Trạng thái bảo hành</th>
+                </tr>
+            </thead>
+            <tbody id="ticketData"></tbody>
+        </table>
+    </div>
+
+    <script>
+        async function fetchTickets() {
+            const loading = document.getElementById('loadingState');
+            const empty = document.getElementById('emptyState');
+            const error = document.getElementById('errorState');
+            const table = document.getElementById('ticketTable');
+            const tbody = document.getElementById('ticketData');
+
+            // Hiển thị trạng thái Loading
+            loading.style.display = 'block';
+            empty.style.display = 'none';
+            error.style.display = 'none';
+            table.style.display = 'none';
+
+            try {
+                const response = await fetch('http://localhost:3000/api/tickets');
+                if (!response.ok) throw new Error('Network error');
+                
+                const data = await response.json();
+                loading.style.display = 'none';
+
+                if (!data || data.length === 0) {
+                    empty.style.display = 'block';
+                } else {
+                    tbody.innerHTML = '';
+                    data.forEach(ticket => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${ticket.id || 'TK-01'}</td>
+                                <td>${ticket.customer_name || 'Trần Tuấn Kiệt'}</td>
+                                <td>${ticket.serial_number || 'SN123456'}</td>
+                                <td>${ticket.status || 'In-Warranty'}</td>
+                            </tr>
+                        `;
+                    });
+                    table.style.display = 'table';
+                }
+            } catch (err) {
+                loading.style.display = 'none';
+                error.style.display = 'block';
+            }
+        }
+
+        // Tự động tải dữ liệu khi mở trang
+        window.onload = fetchTickets;
+    </script>
+</body>
+</html>
