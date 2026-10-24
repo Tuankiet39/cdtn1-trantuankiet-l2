@@ -1,20 +1,21 @@
 {
-  "name": "hello",
-  "version": "1.0.0",
-  "description": "- **Sinh viên:** Trần Tuấn Kiệt - 2374802010263\r - **Học phần:** Chuyên đề Tốt nghiệp 1, HK1 2026-2027\r - **Track:** SE (Node.js)\r - **Luồng nghiệp vụ:** L2 - Tiếp nhận và phân loại yêu cầu bảo hành",
+  "name": "cdtn1-trantuankiet-l2",
+  "version": "0.2.0",
+  "description": "Smart CRM Mekong Mobile - Luong L2 Tiep nhan va phan loai bao hanh",
   "main": "app.js",
-  "directories": {
-    "doc": "docs",
-    "test": "tests"
-  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "test": "jest",
+    "migrate": "node scripts/migrate.js",
+    "seed": "node scripts/seed.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "express": "^5.2.1"
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mysql2": "^3.9.7"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^6.3.4"
   }
 }

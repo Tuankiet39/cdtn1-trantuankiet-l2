@@ -62,6 +62,9 @@
             const error = document.getElementById('errorState');
             const table = document.getElementById('ticketTable');
             const tbody = document.getElementById('ticketData');
+            
+            // Lấy từ khóa tìm kiếm
+            const searchQuery = document.getElementById('searchInput').value.trim();
 
             // Hiển thị trạng thái Loading
             loading.style.display = 'block';
@@ -70,7 +73,8 @@
             table.style.display = 'none';
 
             try {
-                const response = await fetch('http://localhost:3000/api/tickets');
+                // Gửi query parameter `q` lên backend
+                const response = await fetch(`http://localhost:3000/api/tickets?q=${encodeURIComponent(searchQuery)}`);
                 if (!response.ok) throw new Error('Network error');
                 
                 const data = await response.json();
@@ -83,10 +87,10 @@
                     data.forEach(ticket => {
                         tbody.innerHTML += `
                             <tr>
-                                <td>${ticket.id || 'TK-01'}</td>
-                                <td>${ticket.customer_name || 'Trần Tuấn Kiệt'}</td>
-                                <td>${ticket.serial_number || 'SN123456'}</td>
-                                <td>${ticket.status || 'In-Warranty'}</td>
+                                <td>${ticket.id}</td>
+                                <td>${ticket.customer_name}</td>
+                                <td>${ticket.serial_number}</td>
+                                <td>${ticket.status}</td>
                             </tr>
                         `;
                     });
@@ -98,7 +102,6 @@
             }
         }
 
-        // Tự động tải dữ liệu khi mở trang
         window.onload = fetchTickets;
     </script>
 </body>
