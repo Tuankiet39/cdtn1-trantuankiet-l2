@@ -5,6 +5,10 @@ class TicketService {
 
   // QT-03 & QT-05: Tiếp nhận thiết bị, kiểm tra sở hữu và tự động phân loại bảo hành
   async createTicket(data) {
+    if (!data) {
+      throw new Error('INVALID_INPUT: Dữ liệu đầu vào không hợp lệ.');
+    }
+
     const { customer_id, device_id, issue_description } = data;
 
     if (!customer_id || !device_id) {
@@ -18,7 +22,7 @@ class TicketService {
     }
 
     // QT-05: Kiểm tra thời hạn bảo hành dựa trên ngày mua (purchase_date)
-    const purchaseDate = new Date(device.purchase_date);
+    const purchaseDate = device.purchase_date ? new Date(device.purchase_date) : new Date();
     const warrantyMonths = device.warranty_months || 12; 
     const expirationDate = new Date(purchaseDate);
     expirationDate.setMonth(expirationDate.getMonth() + warrantyMonths);
@@ -29,7 +33,7 @@ class TicketService {
     const ticketData = {
       customer_id,
       device_id,
-      issue_description,
+      issue_description: issue_description || '',
       warranty_status: warrantyStatus,
       status: 'Received'
     };
