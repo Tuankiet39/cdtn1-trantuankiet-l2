@@ -1,42 +1,34 @@
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 3000;
+require('dotenv').config();
+const mysql = require('mysql2/promise');
+const createApp = require('./src');
+const TicketRepository = require('./src/repositories/ticket.repository');
+const TicketService = require('./src/services/ticket.service');
 
-// Cấu hình CORS để giao diện HTML kết nối được API
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
+const pool = mysql.createPool({
+  host: process.env.DB_HOST || 'localhost',
+  port: Number(process.env.DB_PORT || 3306),
+  database: process.env.DB_NAME || 'mekong_crm',
+  user: process.env.DB_USER || 'warranty_app',
+  password: process.env.DB_PASSWORD || 'warranty_dev',
+  waitForConnections: true,
+  connectionLimit: 10,
+  timezone: 'Z',
+  dateStrings: ['DATE']
 });
 
-app.use(express.json());
+const ticketService = new TicketService(new TicketRepository(pool));
+const app = createApp(ticketService);
+const port = Number(process.env.PORT || 3000);
 
-// API trả về danh sách phiếu bảo hành
-app.get('/api/tickets', (req, res) => {
-    // Lấy từ khóa tìm kiếm từ Client gửi lên
-    const searchQuery = (req.query.q || '').trim().toLowerCase();
+if (require.main === module) {
+  const server = app.listen(port, () => {
+    console.log(`Warranty ticket API listening on http://localhost:${port}`);
+  });
 
-    const allTickets = [
-        { id: 'TK-01', customer_name: 'Trần Tuấn Kiệt', serial_number: 'SN123456', status: 'In-Warranty' },
-        { id: 'TK-02', customer_name: 'Nguyen Van A', serial_number: 'SN987654', status: 'Out-of-Warranty' }
-    ];
+  server.on('error', (error) => {
+    console.error('Unable to start the API server:', { code: error.code || 'UNKNOWN' });
+    process.exitCode = 1;
+  });
+}
 
-    // Nếu không nhập từ khóa tìm kiếm -> Trả về tất cả dữ liệu
-    if (!searchQuery) {
-        return res.json(allTickets);
-    }
-
-    // Lọc dữ liệu theo từ khóa nhập vào
-    const filteredTickets = allTickets.filter(ticket => 
-        ticket.id.toLowerCase().includes(searchQuery) ||
-        ticket.customer_name.toLowerCase().includes(searchQuery) ||
-        ticket.serial_number.toLowerCase().includes(searchQuery)
-    );
-
-    // Trả về kết quả lọc (Nếu gõ chữ không khớp như KHONGCO123 thì sẽ trả về mảng rỗng [])
-    res.json(filteredTickets);
-});
-
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+module.exports = app;

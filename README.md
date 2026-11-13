@@ -1,18 +1,44 @@
-# Tiếp nhận và phân loại yêu cầu bảo hành
+# Mekong Mobile — Warranty Ticket Intake (L2)
 
-- **Sinh viên:** Trần Tuấn Kiệt - 2374802010263
-- **Học phần:** Chuyên đề Tốt nghiệp 1, HK1 2026-2027
-- **Track:** SE (Node.js)
-- **Luồng nghiệp vụ:** L2 - Tiếp nhận và phân loại yêu cầu bảo hành
+Node.js/Express prototype for receiving warranty tickets, checking a device's
+registered customer, classifying warranty coverage, and searching tickets.
+Student: Trần Tuấn Kiệt (2374802010263), Software Engineering track.
 
-## 1. Mục tiêu
-Hệ thống giúp tự động hóa khâu tiếp nhận yêu cầu bảo hành từ khách hàng và phân loại cho bộ phận kỹ thuật.
+## Run the application
 
-## 2. Giới thiệu dự án & Phạm vi
-Dự án quản lý luồng xử lý đơn hàng từ khâu Khách hàng đặt mua sản phẩm từ giỏ hàng, tự động trừ/hoàn tồn kho (Stock), cho đến khi Nhân viên duyệt đơn.
+Requires Docker Engine and Docker Compose v2. From the repository root, run
+these two commands:
 
-## 6. Hướng dẫn cài đặt và chạy ứng dụng
-1. Clone repository: `git clone https://github.com/Tuankiet39/cdtn1-trantuankiet-l2.git`
-2. Tạo file cấu hình từ mẫu: `cp .env.example .env`
-3. Cài đặt phụ thuộc: `npm install`
-4. Thực thi file SQL schema: Khởi chạy MySQL và import file `schema.sql`
+```sh
+docker compose up -d --build --wait
+docker compose ps
+```
+
+The API and UI are available at `http://localhost:3000`; liveness is at
+`http://localhost:3000/health`. On the first run, MySQL loads the schema and
+two sample tickets. See [docs/deployment-guide.md](docs/deployment-guide.md)
+for environment variables, expected output, and limitations.
+
+## Run automated tests
+
+Requires Node.js 20 or later:
+
+```sh
+npm ci
+npm test -- --runInBand
+```
+
+The suite contains 7 service unit tests and 5 HTTP API tests. API tests use an
+in-memory repository and do not replace a live MySQL deployment check.
+
+## Project layout
+
+- `src/routes`, `src/services`, `src/repositories`, `src/validators`: L2 API.
+- `src/client`: browser search UI.
+- `migrations/`, `seeds/`: MySQL schema and idempotent sample data.
+- `tests/`: service and HTTP API tests.
+- `docs/`: requirements, test plan/report, bug log, deployment guide, security
+  checklist, and API contract.
+
+The prototype has no authentication and is not production-ready. Review
+[docs/checklist-bao-mat.md](docs/checklist-bao-mat.md) before deployment.

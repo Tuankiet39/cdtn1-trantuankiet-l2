@@ -1,11 +1,36 @@
 const express = require('express');
-const app = express();
-const PORT = 3000;
+const path = require('path');
+const createTicketRoutes = require('./routes/ticket.routes');
 
-app.get('/health', (req, res) => {
-    res.json({ status: "ok", message: "Smoke test SE Track passed!" });
-});
+function createApp(ticketService) {
+  const app = express();
+  app.use(express.json({ limit: '16kb' }));
 
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+  app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok' });
+  });
+
+  app.use(express.static(path.join(__dirname, 'client')));
+  app.use('/api', createTicketRoutes(ticketService));
+
+  app.use((error, req, res, next) => {
+    if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
+      return res.status(400).json({
+        status: 'error',
+        code: 'INVALID_JSON',
+        message: 'Request body must be valid JSON.'
+      });
+    }
+
+    console.error('Unhandled request error:', { code: error.code || 'UNKNOWN' });
+    return res.status(500).json({
+      status: 'error',
+      code: 'INTERNAL_SERVER_ERROR',
+      message: 'An unexpected error occurred.'
+    });
+  });
+
+  return app;
+}
+
+module.exports = createApp;

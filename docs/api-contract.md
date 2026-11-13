@@ -1,205 +1,90 @@
-# SMART CRM - MEKONG MOBILE
-## API CONTRACT SPECIFICATION (SOFTWARE ENGINEERING TRACK)
-**Bài tập:** Bài tập 1 - Phân tích và Thiết kế Systems
-**Luồng nghiệp vụ:** Luồng L2 - Xử lý / Quản lý đơn hàng (Order Management)
-**Sinh viên thực hiện:** Trần Tuấn Kiệt
-**MSSV:** 2374802010263
-**Track chuyên ngành:** Software Engineering (SE)
+# Warranty Ticket API
 
----
+This document describes the endpoints currently mounted by the L2 prototype.
+Examples are from the automated in-process API tests (Supertest with a test
+repository); they are not evidence of a live Docker/MySQL run.
 
-## 1. TỔNG QUAN DANH SÁCH ENDPOINTS (SUMMARY)
+## `GET /health`
 
-| STT | Phương thức (HTTP) | Đường dẫn Endpoint | Mục đích / Chức năng | User Story / Use Case | Status Code chính |
-| :-: | :---: | :--- | :--- | :--- | :--- |
-| 1 | `POST` | `/api/v1/orders` | Tạo đơn hàng mới từ giỏ hàng & trừ tồn kho (Stock) | US1 / UC1 | 201, 400, 409, 500 |
-| 2 | `GET` | `/api/v1/orders` | Tra cứu danh sách đơn hàng (Lọc theo OrderStatus) | US4 / UC4 | 200, 400, 500 |
-| 3 | `GET` | `/api/v1/orders/{order_id}` | Xem chi tiết thông tin đơn hàng & danh sách OrderItem | US5 / UC4 | 200, 404, 500 |
-| 4 | `PUT` | `/api/v1/orders/{order_id}/status` | Nhân viên xác nhận/chuyển trạng thái đơn hàng | US2 / UC2 | 200, 400, 404, 409 |
-| 5 | `POST` | `/api/v1/orders/{order_id}/cancel` | Khách hàng hủy đơn hàng Pending & hoàn Stock | US3 / UC3 | 200, 400, 404, 409 |
-| 6 | `GET` | `/api/v1/products/{product_id}/stock` | Kiểm tra số lượng tồn kho khả dụng của sản phẩm | BR2 / UC1 | 200, 404, 500 |
+1. **Method and path:** `GET /health`
+2. **Business behavior:** Confirms that the API process is responding. This is
+   a liveness check, not a database-readiness check.
+3. **Authentication:** None in this prototype.
+4. **Parameters and request body:** None.
+5. **Success response (`200`):**
 
----
+   ```json
+   { "status": "ok" }
+   ```
 
-## 2. ĐẶC TẢ CHI TIẾT TỪNG ENDPOINT
+6. **Error codes:** No endpoint-specific error response.
+7. **Limitations:** A successful response does not prove that MySQL queries
+   will succeed.
 
-### 2.1. POST /api/v1/orders
-- **Mục đích:** Khách hàng đặt mua hàng từ giỏ hàng. Hệ thống khởi tạo bản ghi `Orders`, `OrderItems` và tự động trừ số lượng `Stock` sản phẩm.
-- **Quy tắc Validation:**
-  * `user_id`: Bắt buộc, kiểu Integer (> 0), tài khoản phải tồn tại trong bảng `Users`.
-  * `items`: Bắt buộc, mảng (Array) có từ 1 phần tử trở lên.
-  * `items[].product_id`: Bắt buộc, kiểu Integer, sản phẩm phải tồn tại.
-  * `items[].quantity`: Bắt buộc, kiểu Integer (> 0).
-  * `items[].unit_price`: Bắt buộc, kiểu Decimal/Float (> 0).
+## `GET /api/tickets`
 
-#### Request Example (JSON Body):
-```json
-{
-  "user_id": 1,
-  "items": [
-    {
-      "product_id": 101,
-      "quantity": 2,
-      "unit_price": 15000000.00
-    },
-    {
-      "product_id": 102,
-      "quantity": 1,
-      "unit_price": 5000000.00
-    }
-  ]
-}
-{
-  "status": "success",
-  "code": 201,
-  "message": "Tạo đơn hàng thành công",
-  "data": {
-    "order_id": 501,
-    "user_id": 1,
-    "total_amount": 35000000.00,
-    "order_status": "Pending",
-    "created_at": "2026-10-10T09:30:00Z",
-    "items_count": 2
-  }
-}
-{
-  "status": "error",
-  "code": "OUT_OF_STOCK",
-  "message": "Sản phẩm [iPhone 15 Pro] không đủ số lượng tồn kho khả dụng (Tồn kho còn: 1, Đặt: 2)"
-}
-{
-  "status": "error",
-  "code": "OUT_OF_STOCK",
-  "message": "Sản phẩm [iPhone 15 Pro] không đủ số lượng tồn kho khả dụng (Tồn kho còn: 1, Đặt: 2)"
-}
-{
-  "status": "success",
-  "code": 200,
-  "pagination": {
-    "current_page": 1,
-    "total_pages": 5,
-    "total_items": 45,
-    "limit": 10
-  },
-  "data": [
-    {
-      "order_id": 501,
-      "full_name": "Trần Tuấn Kiệt",
-      "total_amount": 35000000.00,
-      "order_status": "Pending",
-      "created_at": "2026-10-10T09:30:00Z"
-    },
-    {
-      "order_id": 500,
-      "full_name": "Nguyễn Văn A",
-      "total_amount": 12000000.00,
-      "order_status": "Pending",
-      "created_at": "2026-10-10T09:15:00Z"
-    }
-  ]
-}
-{
-  "status": "success",
-  "code": 200,
-  "pagination": {
-    "current_page": 1,
-    "total_pages": 5,
-    "total_items": 45,
-    "limit": 10
-  },
-  "data": [
-    {
-      "order_id": 501,
-      "full_name": "Trần Tuấn Kiệt",
-      "total_amount": 35000000.00,
-      "order_status": "Pending",
-      "created_at": "2026-10-10T09:30:00Z"
-    },
-    {
-      "order_id": 500,
-      "full_name": "Nguyễn Văn A",
-      "total_amount": 12000000.00,
-      "order_status": "Pending",
-      "created_at": "2026-10-10T09:15:00Z"
-    }
-  ]
-}
-{
-  "status": "success",
-  "code": 200,
-  "data": {
-    "order_id": 501,
-    "user": {
-      "user_id": 1,
-      "full_name": "Trần Tuấn Kiệt",
-      "email": "tuankiet@gmail.com"
-    },
-    "total_amount": 35000000.00,
-    "order_status": "Pending",
-    "created_at": "2026-10-10T09:30:00Z",
-    "items": [
-      {
-        "item_id": 1001,
-        "product_id": 101,
-        "product_name": "iPhone 15 Pro",
-        "quantity": 2,
-        "unit_price": 15000000.00
-      },
-      {
-        "item_id": 1002,
-        "product_id": 102,
-        "product_name": "Tai nghe AirPods Pro",
-        "quantity": 1,
-        "unit_price": 5000000.00
-      }
-    ]
-  }
-}
-{
-  "status": "error",
-  "code": "ORDER_NOT_FOUND",
-  "message": "Không tìm thấy đơn hàng với ID: 999"
-}
-{
-  "new_status": "Confirmed",
-  "note": "Đơn hàng đã kiểm tra thông tin hợp lệ, chuyển qua khâu đóng gói"
-}
-{
-  "status": "success",
-  "code": 200,
-  "message": "Cập nhật trạng thái đơn hàng thành công",
-  "data": {
-    "order_id": 501,
-    "previous_status": "Pending",
-    "current_status": "Confirmed",
-    "updated_at": "2026-10-10T09:45:00Z"
-  }
-}
-{
-  "status": "error",
-  "code": "INVALID_STATUS_TRANSITION",
-  "message": "Không thể chuyển trạng thái từ Cancelled sang Confirmed"
-}
-{
-  "user_id": 1,
-  "reason": "Đổi ý không muốn mua nữa"
-}
-{
-  "user_id": 1,
-  "reason": "Đổi ý không muốn mua nữa"
-}
-{
-  "status": "error",
-  "code": "CANCEL_NOT_ALLOWED",
-  "message": "Đơn hàng đã qua khâu xử lý (Confirmed), không thể tự hủy trên hệ thống"
-}
-{
-  "status": "success",
-  "code": 200,
-  "data": {
-    "product_id": 101,
-    "product_name": "iPhone 15 Pro",
-    "available_stock": 25,
-    "is_available": true
-  }
-}
+1. **Method and path:** `GET /api/tickets`
+2. **Business behavior:** Lists tickets; optional `q` searches ticket ID,
+   customer name, and device serial.
+3. **Authentication:** None. Customer-specific access control is not
+   implemented.
+4. **Parameters and request body:** Optional query parameter `q`, string of at
+   most 100 characters; no request body.
+5. **Success response (`200`):**
+
+   ```json
+   [
+     {
+       "id": 1,
+       "customer_name": "Tran Tuan Kiet",
+       "serial_number": "SN123456",
+       "status": "In-Warranty"
+     }
+   ]
+   ```
+
+6. **Error codes:** `400 INVALID_QUERY`; `500 INTERNAL_SERVER_ERROR`.
+7. **Limitations:** Results are not paginated. The list is not protected by
+   authentication. Search uses substring matching.
+
+## `POST /api/tickets`
+
+1. **Method and path:** `POST /api/tickets`
+2. **Business behavior:** Validates input and device ownership, computes
+   warranty coverage, and stores the ticket in `Received` status.
+3. **Authentication:** None. The client-supplied `customer_id` is not an
+   authenticated identity; this must not be used as a production authorization
+   boundary.
+4. **Parameters and request body:** JSON fields `customer_id` (positive
+   integer), `device_id` (positive integer), and `issue_description` (1–1,000
+   characters).
+
+   ```json
+   {
+     "customer_id": 1,
+     "device_id": 10,
+     "issue_description": "Screen issue"
+   }
+   ```
+
+5. **Success response (`201`):**
+
+   ```json
+   {
+     "status": "success",
+     "data": {
+       "ticket_id": 3,
+       "customer_id": 1,
+       "device_id": 10,
+       "issue_description": "Screen issue",
+       "warranty_status": "In-Warranty",
+       "status": "Received"
+     }
+   }
+   ```
+
+6. **Error codes:** `400 INVALID_FORMAT` or `INVALID_JSON`; `404
+   DEVICE_NOT_FOUND`; `500 INTERNAL_SERVER_ERROR`.
+7. **Limitations:** There is no authentication, rate limiting, technician
+   assignment, idempotency key, or ticket update endpoint. Database failures
+   return a generic response; only an error code is logged.

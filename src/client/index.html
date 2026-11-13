@@ -85,14 +85,14 @@
                 } else {
                     tbody.innerHTML = '';
                     data.forEach(ticket => {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${ticket.id}</td>
-                                <td>${ticket.customer_name}</td>
-                                <td>${ticket.serial_number}</td>
-                                <td>${ticket.status}</td>
-                            </tr>
-                        `;
+                        const row = document.createElement('tr');
+                        [ticket.id, ticket.customer_name, ticket.serial_number, ticket.status]
+                            .forEach(value => {
+                                const cell = document.createElement('td');
+                                cell.textContent = value;
+                                row.appendChild(cell);
+                            });
+                        tbody.appendChild(row);
                     });
                     table.style.display = 'table';
                 }

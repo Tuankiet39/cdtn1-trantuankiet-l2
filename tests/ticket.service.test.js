@@ -1,81 +1,87 @@
 const TicketService = require('../src/services/ticket.service');
 
-describe('TicketService Unit Tests', () => {
+describe('TicketService', () => {
   let ticketService;
-  let mockRepo;
+  let repository;
+  const today = new Date(2026, 10, 13);
 
   beforeEach(() => {
-    mockRepo = {
+    repository = {
+      listTickets: jest.fn().mockResolvedValue([]),
       findDeviceWithOwner: jest.fn(),
-      createTicket: jest.fn()
+      createTicket: jest.fn().mockImplementation(async (ticket) => ({
+        ticket_id: 1,
+        ...ticket
+      }))
     };
-    ticketService = new TicketService(mockRepo);
+    ticketService = new TicketService(repository, () => new Date(today));
   });
 
-  // Test 1: Luồng đúng - Thiết bị còn hạn bảo hành
-  test('should create ticket successfully when device is in-warranty', async () => {
-    const mockDevice = {
-      device_id: 'DEV-001',
-      purchase_date: new Date(),
-      warranty_months: 12
-    };
-    mockRepo.findDeviceWithOwner.mockResolvedValue(mockDevice);
-    mockRepo.createTicket.mockResolvedValue({ ticket_id: 'TICK-001', status: 'Received' });
-
-    const result = await ticketService.createTicket({
-      customer_id: 'CUST-001',
-      device_id: 'DEV-001',
-      issue_description: 'Lỗi màn hình'
+  function createTicket(device = { purchase_date: '2026-01-01', warranty_months: 12 }) {
+    repository.findDeviceWithOwner.mockResolvedValue(device);
+    return ticketService.createTicket({
+      customer_id: 1,
+      device_id: 1,
+      issue_description: 'Screen does not turn on'
     });
+  }
 
-    expect(result).toBeDefined();
-    expect(result.ticket_id).toBe('TICK-001');
+  test('T01 classifies a device within its warranty period', async () => {
+    await createTicket();
+
+    expect(repository.createTicket).toHaveBeenCalledWith(
+      expect.objectContaining({ warranty_status: 'In-Warranty', status: 'Received' })
+    );
   });
 
-  // Test 2: Giá trị biên - Thiết bị đã hết hạn bảo hành
-  test('should assign Out-of-Warranty status when device warranty has expired', async () => {
-    const oldDate = new Date();
-    oldDate.setFullYear(oldDate.getFullYear() - 2);
-    const mockDevice = {
-      device_id: 'DEV-002',
-      purchase_date: oldDate,
-      warranty_months: 12
-    };
-    mockRepo.findDeviceWithOwner.mockResolvedValue(mockDevice);
-    mockRepo.createTicket.mockResolvedValue({ ticket_id: 'TICK-002', warranty_status: 'Out-of-Warranty' });
+  test('T02 classifies a device past its warranty period', async () => {
+    await createTicket({ purchase_date: '2024-01-01', warranty_months: 12 });
 
-    const result = await ticketService.createTicket({
-      customer_id: 'CUST-001',
-      device_id: 'DEV-002',
-      issue_description: 'Lỗi pin'
-    });
-
-    expect(result).toBeDefined();
-    expect(mockRepo.createTicket).toHaveBeenCalledWith(
+    expect(repository.createTicket).toHaveBeenCalledWith(
       expect.objectContaining({ warranty_status: 'Out-of-Warranty' })
     );
   });
 
-  // Test 3: Luồng ngoại lệ - Thiếu thông tin đầu vào
-  test('should throw error when customer_id or device_id is missing', async () => {
-    await expect(
-      ticketService.createTicket({ customer_id: '', device_id: '' })
-    ).rejects.toThrow('INVALID_INPUT');
+  test('T03 includes the final calendar day of warranty', async () => {
+    ticketService = new TicketService(repository, () => new Date(2025, 1, 28));
+    await createTicket({ purchase_date: '2025-01-31', warranty_months: 1 });
+
+    expect(repository.createTicket).toHaveBeenCalledWith(
+      expect.objectContaining({ warranty_status: 'In-Warranty' })
+    );
   });
 
-  // Test 4: Luồng ngoại lệ - Thiết bị không tồn tại
-  test('should throw error when device is not found or not owned by customer', async () => {
-    mockRepo.findDeviceWithOwner.mockResolvedValue(null);
+  test('T04 expires warranty on the day after the final calendar day', async () => {
+    ticketService = new TicketService(repository, () => new Date(2025, 2, 1));
+    await createTicket({ purchase_date: '2025-01-31', warranty_months: 1 });
 
-    await expect(
-      ticketService.createTicket({ customer_id: 'CUST-001', device_id: 'INVALID-DEV' })
-    ).rejects.toThrow('DEVICE_NOT_FOUND');
+    expect(repository.createTicket).toHaveBeenCalledWith(
+      expect.objectContaining({ warranty_status: 'Out-of-Warranty' })
+    );
   });
 
-  // Test 5: Luồng ngoại lệ - Dữ liệu null
-  test('should handle missing data input gracefully and throw error', async () => {
-    await expect(
-      ticketService.createTicket(null)
-    ).rejects.toThrow('INVALID_INPUT');
+  test('T05 rejects missing or invalid ticket fields', async () => {
+    await expect(ticketService.createTicket(null)).rejects.toMatchObject({
+      code: 'INVALID_INPUT',
+      statusCode: 400
+    });
+    expect(repository.findDeviceWithOwner).not.toHaveBeenCalled();
+  });
+
+  test('T06 rejects a device not owned by the supplied customer', async () => {
+    repository.findDeviceWithOwner.mockResolvedValue(null);
+
+    await expect(ticketService.createTicket({
+      customer_id: 2,
+      device_id: 1,
+      issue_description: 'Screen issue'
+    })).rejects.toMatchObject({ code: 'DEVICE_NOT_FOUND', statusCode: 404 });
+    expect(repository.createTicket).not.toHaveBeenCalled();
+  });
+
+  test('T07 fails safely when stored warranty dates are invalid', async () => {
+    await expect(createTicket({ purchase_date: 'not-a-date', warranty_months: 12 }))
+      .rejects.toMatchObject({ code: 'INVALID_DEVICE_DATA', statusCode: 500 });
+    expect(repository.createTicket).not.toHaveBeenCalled();
   });
 });
