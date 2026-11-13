@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>BT3 - Trần Tuấn Kiệt - L2</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 14mm 15mm 16mm;
+      @bottom-right {
+        content: "CDTN1 • BT3 • 13/11/2026";
+        color: #64748b;
+        font: 8pt Arial, sans-serif;
+      }
+    }
+    @page wide {
+      size: A4 landscape;
+      margin: 10mm 12mm 13mm;
+      @bottom-right {
+        content: "CDTN1 • BT3 • 13/11/2026";
+        color: #64748b;
+        font: 8pt Arial, sans-serif;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: #172033;
+      font: 9.2pt/1.38 Arial, "Malgun Gothic", sans-serif;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { margin-bottom: 5mm; color: #102a43; font-size: 22pt; line-height: 1.15; }
+    h2 { margin: 0 0 3mm; color: #102a43; font-size: 14pt; }
+    h3 { margin: 3mm 0 1.5mm; color: #176b87; font-size: 10pt; }
+    p { margin-bottom: 2.5mm; }
+    ul, ol { margin: 1.5mm 0 3mm 5mm; padding-left: 4mm; }
+    li { margin-bottom: 1.2mm; }
+    code { font: 8.3pt Consolas, monospace; color: #075985; }
+    .page { break-after: page; page-break-after: always; }
+    .page:last-child { break-after: auto; page-break-after: auto; }
+    .wide { page: wide; }
+    .eyebrow {
+      margin-bottom: 2mm;
+      color: #e36a1e;
+      font-size: 8pt;
+      font-weight: bold;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+    .lead { color: #526579; font-size: 10pt; }
+    .rule { height: 1.4mm; margin: 4mm 0 5mm; background: #e36a1e; }
+    .box {
+      margin: 2.5mm 0;
+      padding: 3mm 3.5mm;
+      border: 0.3mm solid #d5e0e9;
+      border-radius: 2mm;
+      background: #f7fafc;
+    }
+    .callout {
+      padding: 3mm 4mm;
+      border-left: 1.4mm solid #e36a1e;
+      background: #fff7ed;
+    }
+    .ok { color: #16794a; font-weight: bold; }
+    .gap { color: #a44a06; font-weight: bold; }
+    .small { color: #526579; font-size: 8pt; }
+    .cover {
+      min-height: 255mm;
+      padding: 18mm 14mm 12mm;
+      border: 1mm solid #d5e0e9;
+      background: linear-gradient(150deg, #f8fbff 0%, #fff 60%, #fff7ed 100%);
+    }
+    .cover-band {
+      margin: 10mm -14mm 12mm;
+      padding: 12mm 14mm;
+      color: white;
+      background: #102a43;
+    }
+    .cover-band h1 { margin: 0 0 3mm; color: white; font-size: 28pt; }
+    .cover-band .subtitle { color: #c9e6f2; font-size: 12pt; }
+    .cover-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm 8mm; }
+    .cover-item { padding: 2mm 0; border-bottom: 0.25mm solid #d5e0e9; }
+    .cover-item b { display: block; margin-bottom: 1mm; color: #526579; font-size: 8pt; }
+    .url { overflow-wrap: anywhere; color: #075985; font-size: 8pt; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td {
+      padding: 2mm;
+      border: 0.25mm solid #d5e0e9;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { color: #102a43; background: #eaf3f8; font-weight: bold; }
+    .compact { font-size: 8pt; line-height: 1.28; }
+    .compact th, .compact td { padding: 1.5mm 1.7mm; }
+    .test-table { table-layout: fixed; font-size: 7.25pt; line-height: 1.22; }
+    .test-table th, .test-table td { padding: 1.7mm 1.5mm; }
+    .test-table th { background: #dceef6; }
+    .test-table .id { width: 7mm; }
+    .test-table .pre { width: 40mm; }
+    .test-table .step { width: 32mm; }
+    .test-table .data { width: 39mm; }
+    .test-table .expected { width: 47mm; }
+    .test-table .priority { width: 15mm; }
+    .test-table .actual { width: 48mm; }
+    .test-table .status { width: 13mm; }
+    .metric-row { display: flex; gap: 3mm; margin: 3mm 0 4mm; }
+    .metric {
+      flex: 1;
+      padding: 3mm;
+      border: 0.3mm solid #d5e0e9;
+      border-radius: 2mm;
+      background: #f7fafc;
+      text-align: center;
+    }
+    .metric strong { display: block; color: #16794a; font-size: 17pt; }
+    .diagram {
+      display: flex;
+      align-items: stretch;
+      gap: 2mm;
+      margin: 4mm 0;
+    }
+    .layer {
+      flex: 1;
+      padding: 3mm 2mm;
+      border: 0.35mm solid #85b4c8;
+      border-radius: 2mm;
+      background: #f0f8fb;
+      text-align: center;
+    }
+    .layer b { display: block; margin-bottom: 1mm; color: #12566e; }
+    .arrow { align-self: center; color: #e36a1e; font-size: 16pt; font-weight: bold; }
+    .db { margin-top: 2mm; padding: 3mm; background: #102a43; color: white; text-align: center; }
+    .db b { color: #fff; }
+    .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3mm; }
+    .evidence-main img { height: 45mm; }
+    .evidence-small img { max-height: 18mm; }
+    figure { margin: 0; padding: 2mm; border: 0.25mm solid #d5e0e9; }
+    figure img { display: block; width: 100%; height: auto; object-fit: contain; }
+    figcaption { margin-top: 1.5mm; color: #526579; font-size: 7.5pt; }
+    .ai-table { font-size: 7.6pt; line-height: 1.28; }
+    .ai-table td, .ai-table th { padding: 2mm; }
+    .signature { margin-top: 7mm; padding-top: 3mm; border-top: 0.3mm solid #d5e0e9; }
+  </style>
+</head>
+<body>
+  <section class="page">
+    <div class="cover">
+      <div class="eyebrow">Chuyên đề Tốt nghiệp 1 • Học kỳ 1 • Năm học 2026–2027</div>
+      <div class="cover-band">
+        <h1>BÁO CÁO BÀI TẬP 3</h1>
+        <div class="subtitle">Mekong Mobile — Tiếp nhận và phân loại yêu cầu bảo hành</div>
+      </div>
+      <div class="cover-grid">
+        <div class="cover-item"><b>Học phần</b>Chuyên đề Tốt nghiệp 1 (Specialized Graduation Topic I)</div>
+        <div class="cover-item"><b>Bài tập / luồng nghiệp vụ</b>BT3 • L2 — Tiếp nhận và phân loại bảo hành</div>
+        <div class="cover-item"><b>Track</b>SE — Software Engineering</div>
+        <div class="cover-item"><b>Họ và tên</b>Trần Tuấn Kiệt</div>
+        <div class="cover-item"><b>MSSV</b>2374802010263</div>
+        <div class="cover-item"><b>Lớp</b>________________________________________</div>
+        <div class="cover-item"><b>Ngày lập báo cáo</b>13/11/2026</div>
+        <div class="cover-item"><b>Tên file theo yêu cầu</b>BT3_2374802010263_TranTuanKiet.pdf</div>
+      </div>
+      <div class="box" style="margin-top:8mm">
+        <b>GitHub repository</b><br>
+        <span class="url">https://github.com/Tuankiet39/cdtn1-trantuankiet-l2</span>
+        <p style="margin:2mm 0 0"><b>Tag yêu cầu:</b> v1.0 — chưa tạo/push; cần tạo và xác minh tag trước khi nộp bản chính thức.</p>
+        <p style="margin:2mm 0 0"><b>Link deploy:</b> chưa có; bản demo hiện chạy local tại <code>http://localhost:3000</code>.</p>
+      </div>
+      <div class="rule"></div>
+      <p class="lead">Bản mẫu được tổng hợp từ mã nguồn, tài liệu kiểm thử và phép chạy thực tế ngày 13/11/2026. Các giới hạn chưa kiểm chứng được nêu rõ, không thay thế xác nhận cuối cùng của sinh viên.</p>
+    </div>
+  </section>
+
+  <section class="page">
+    <div class="eyebrow">Mục 1 • Test Plan rút gọn</div>
+    <h1>Kế hoạch kiểm thử</h1>
+    <p class="lead">Phạm vi: quy tắc tiếp nhận ticket bảo hành L2, kiểm tra dữ liệu, quyền sở hữu thiết bị và các API đang được triển khai.</p>
+    <div class="metric-row">
+      <div class="metric"><strong>12</strong>test tự động</div>
+      <div class="metric"><strong>7 + 5</strong>service + HTTP API</div>
+      <div class="metric"><strong>0</strong>test thất bại ở lần chạy ghi nhận</div>
+    </div>
+    <h3>Phạm vi và mức kiểm thử</h3>
+    <ul>
+      <li><b>Unit/service:</b> ngày bảo hành, biên cuối tháng, payload không hợp lệ, thiết bị không thuộc khách hàng, dữ liệu thiết bị hỏng.</li>
+      <li><b>HTTP API:</b> health, danh sách/tìm kiếm, POST hợp lệ, validation lỗi, từ chối thiết bị sai chủ.</li>
+      <li><b>Smoke triển khai thủ công:</b> trạng thái Compose, liveness và đọc hai record mẫu từ MySQL; tách biệt với 12 test tự động.</li>
+    </ul>
+    <h3>Ngoài phạm vi</h3>
+    <p>Đăng nhập/phân quyền người dùng; chuyển trạng thái và phân công kỹ thuật viên; tải đồng thời; bảo mật xâm nhập; trình duyệt tự động; kiểm thử khôi phục dữ liệu; và kiểm thử khởi tạo trên một máy hoàn toàn sạch.</p>
+    <h3>Tiêu chí đạt</h3>
+    <ol>
+      <li><code>npm test -- --runInBand</code> chạy đủ 12/12 test; không có lỗi test.</li>
+      <li>QT-03, QT-05, QT-06 và QT-07 có kiểm thử bao phủ.</li>
+      <li>Phép smoke Docker: hai dịch vụ healthy; health trả HTTP 200; danh sách ticket lấy được từ MySQL.</li>
+      <li>Không mô tả smoke check thủ công là database integration test tự động.</li>
+    </ol>
+    <h3>Môi trường và dữ liệu</h3>
+    <div class="box">
+      Node.js / Jest / Supertest; MySQL 8.4 và Docker Compose cho smoke check. Unit/API tests dùng đồng hồ cố định, repository giả lập và dữ liệu được tạo riêng trong từng test. Lệnh tự động không cần reset database.
+    </div>
+    <h3>Liên kết test với yêu cầu</h3>
+    <table class="compact">
+      <thead><tr><th>Quy tắc</th><th>Mô tả</th><th>Test liên quan</th></tr></thead>
+      <tbody>
+        <tr><td>QT-03</td><td>Thiết bị tồn tại và thuộc customer yêu cầu.</td><td>T06, T10, T12</td></tr>
+        <tr><td>QT-05</td><td>Tính thời hạn theo ngày lịch; ngày cuối vẫn còn hạn.</td><td>T01–T04</td></tr>
+        <tr><td>QT-06</td><td>Ticket mới có mô tả hợp lệ và trạng thái Received.</td><td>T01, T05, T10, T11</td></tr>
+        <tr><td>QT-07</td><td>Tìm theo mã ticket, tên khách hàng hoặc serial.</td><td>T08, T09</td></tr>
+      </tbody>
+    </table>
+    <p class="small" style="margin-top:4mm">Kết quả chi tiết và mức ưu tiên từng test được trình bày ở Mục 2. Phép thử trên máy sạch chưa được thực hiện; xem ghi chú giới hạn tại Mục 4.</p>
+  </section>
+
+  <section class="page wide">
+    <div class="eyebrow">Mục 2 • Test Report • T01–T06</div>
+    <h1>Kết quả kiểm thử tự động (1/2)</h1>
+    <p class="small">Lệnh: <code>npm test -- --runInBand</code> • 2 suites, 12 tests, 0 failed • Repo giả lập cho API tests.</p>
+    <table class="test-table">
+      <thead><tr><th class="id">ID</th><th class="pre">Preconditions</th><th class="step">Steps</th><th class="data">Test data</th><th class="expected">Expected result</th><th class="priority">Priority</th><th class="actual">Actual result</th><th class="status">Status</th></tr></thead>
+      <tbody>
+        <tr><td>T01</td><td>Thiết bị thuộc customer; còn trong hạn.</td><td>Gọi service tạo ticket.</td><td>Mua 2026-01-01; 12 tháng; đồng hồ 2026-11-13.</td><td><code>In-Warranty</code>; status <code>Received</code>.</td><td>High</td><td>Repository nhận đúng classification và status.</td><td class="ok">PASS</td></tr>
+        <tr><td>T02</td><td>Thiết bị thuộc customer; hết hạn.</td><td>Gọi service tạo ticket.</td><td>Mua 2024-01-01; 12 tháng; đồng hồ 2026-11-13.</td><td><code>Out-of-Warranty</code>.</td><td>High</td><td>Repository nhận <code>Out-of-Warranty</code>.</td><td class="ok">PASS</td></tr>
+        <tr><td>T03</td><td>Ngày kiểm tra là ngày cuối bảo hành.</td><td>Gọi service tạo ticket.</td><td>Mua 2025-01-31; 1 tháng; ngày 2025-02-28.</td><td>Ngày cuối lịch vẫn được bảo hành.</td><td>High</td><td>Repository nhận <code>In-Warranty</code>.</td><td class="ok">PASS</td></tr>
+        <tr><td>T04</td><td>Ngày kiểm tra sau hạn một ngày.</td><td>Gọi service tạo ticket.</td><td>Mua 2025-01-31; 1 tháng; ngày 2025-03-01.</td><td>Ngày kế tiếp là ngoài bảo hành.</td><td>High</td><td>Repository nhận <code>Out-of-Warranty</code>.</td><td class="ok">PASS</td></tr>
+        <tr><td>T05</td><td>Thiếu payload ticket.</td><td>Gọi service với null.</td><td><code>null</code>.</td><td>Từ chối <code>INVALID_INPUT</code>; không truy vấn repository.</td><td>High</td><td>Lỗi đúng mã; repository không được gọi.</td><td class="ok">PASS</td></tr>
+        <tr><td>T06</td><td>Không tìm thấy quan hệ customer/device.</td><td>Tạo ticket bằng customer khác.</td><td>Customer 2; device 1.</td><td>Từ chối <code>DEVICE_NOT_FOUND</code>; không tạo ticket.</td><td>High</td><td>Lỗi đúng mã; create không được gọi.</td><td class="ok">PASS</td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:5mm"><b>Kết quả nhóm:</b> 6/6 PASS. T03–T04 kiểm tra chính xác biên hết hạn tại cuối tháng 2.</div>
+  </section>
+
+  <section class="page wide">
+    <div class="eyebrow">Mục 2 • Test Report • T07–T12</div>
+    <h1>Kết quả kiểm thử tự động (2/2)</h1>
+    <p class="small">Test API chạy bằng Supertest với repository trong bộ nhớ; không dùng MySQL thật.</p>
+    <table class="test-table">
+      <thead><tr><th class="id">ID</th><th class="pre">Preconditions</th><th class="step">Steps</th><th class="data">Test data</th><th class="expected">Expected result</th><th class="priority">Priority</th><th class="actual">Actual result</th><th class="status">Status</th></tr></thead>
+      <tbody>
+        <tr><td>T07</td><td>Dữ liệu bảo hành thiết bị lưu trong repository sai định dạng.</td><td>Tạo ticket bằng device đó.</td><td>Ngày mua <code>not-a-date</code>; 12 tháng.</td><td>Từ chối <code>INVALID_DEVICE_DATA</code>; không tạo.</td><td>Medium</td><td>Lỗi dữ liệu đúng mã; create không được gọi.</td><td class="ok">PASS</td></tr>
+        <tr><td>T08</td><td>API có 2 ticket giả lập.</td><td>Gọi health và danh sách.</td><td>Record ID 1, 2.</td><td>Health 200; list 200 và có hai record.</td><td>High</td><td>Cả hai phản hồi 200, đúng body.</td><td class="ok">PASS</td></tr>
+        <tr><td>T09</td><td>Có serial <code>SN123456</code>.</td><td>Gửi cùng truy vấn hai lần.</td><td><code>GET /api/tickets?q=SN123456</code>.</td><td>Hai kết quả giống nhau; có 1 record khớp.</td><td>Medium</td><td>Hai response giống nhau, một record.</td><td class="ok">PASS</td></tr>
+        <tr><td>T10</td><td>Customer 1 sở hữu device 10.</td><td>POST payload hợp lệ.</td><td>Customer 1; device 10; mô tả Screen issue.</td><td>HTTP 201; ID 3; còn hạn; status Received.</td><td>High</td><td>HTTP 201; đúng các trường ticket mong đợi.</td><td class="ok">PASS</td></tr>
+        <tr><td>T11</td><td>API có thể nhận request.</td><td>POST ID sai kiểu và mô tả rỗng.</td><td>Customer ID chuỗi "1"; description rỗng.</td><td>HTTP 400 <code>INVALID_FORMAT</code>; có field errors.</td><td>High</td><td>HTTP 400; lỗi customer_id và description.</td><td class="ok">PASS</td></tr>
+        <tr><td>T12</td><td>Device 10 thuộc customer 1.</td><td>POST device đó dưới customer 2.</td><td>Customer 2; device 10.</td><td>HTTP 404; không tiết lộ serial.</td><td>High</td><td>HTTP 404; body không có serial.</td><td class="ok">PASS</td></tr>
+      </tbody>
+    </table>
+    <div class="metric-row" style="margin-top:5mm">
+      <div class="metric"><strong>2/2</strong>test suites</div>
+      <div class="metric"><strong>12/12</strong>test cases</div>
+      <div class="metric"><strong>0</strong>failures</div>
+    </div>
+    <p class="small">Smoke test Docker là kiểm tra thủ công tách riêng: hai container healthy; API đọc được hai customer/ticket mẫu. Chưa có automated integration test DB hoặc clean-machine test.</p>
+  </section>
+
+  <section class="page">
+    <div class="eyebrow">Mục 3 • Bug Log</div>
+    <h1>Nhật ký lỗi và khắc phục</h1>
+    <p class="lead">Các lỗi được phát hiện khi đối chiếu prototype với luồng L2. Regression tests được thêm sau khi sửa; không lưu lại lần chạy test đỏ trước sửa.</p>
+    <table class="compact">
+      <thead><tr><th>ID / mức</th><th>Triệu chứng và nguyên nhân</th><th>Khắc phục</th><th>Kiểm chứng</th></tr></thead>
+      <tbody>
+        <tr><td><b>BUG-01</b><br>Critical</td><td>Entry point không gắn warranty service và API ticket; app trả dữ liệu giả.</td><td>Nối app factory, route, service, repository MySQL; bỏ luồng giả.</td><td>T08, T10; Docker smoke.</td></tr>
+        <tr><td><b>BUG-02</b><br>Major</td><td>Route/validator vẫn theo payload Orders sau khi đổi domain.</td><td>Thay bằng GET/POST <code>/api/tickets</code>, kiểm tra customer/device/mô tả.</td><td>T08–T12.</td></tr>
+        <tr><td><b>BUG-03</b><br>Major</td><td>Schema/seed Users/Products/Orders không khớp repository ticket.</td><td>Tạo Customers, Devices, Tickets với khóa ngoại; cập nhật seed mẫu.</td><td>MySQL 8.4 khởi tạo; GET trả 2 record.</td></tr>
+        <tr><td><b>BUG-04</b><br>Major</td><td>Thời hạn tháng có thể tràn qua tháng sau; ngày cuối bị phân loại sai.</td><td>Giới hạn ngày theo ngày cuối tháng đích; so sánh ngày lịch.</td><td>T03, T04.</td></tr>
+        <tr><td><b>BUG-05</b><br>Major</td><td>Tên khách hàng tiếng Việt bị lỗi mã hóa khi nhập seed MySQL.</td><td>Đặt charset <code>utf8mb4</code> trong seed và nạp lại dữ liệu.</td><td>Seed vào schema MySQL trống cho bytes UTF-8 đúng; UI hiển thị tên đúng.</td></tr>
+      </tbody>
+    </table>
+    <h3>Trạng thái phát hành</h3>
+    <div class="callout">
+      Các thay đổi ứng dụng chính đã có commit local <code>13456e0</code> và <code>8a0fa7c</code>. Sửa charset seed và các cập nhật tài liệu trong báo cáo hiện chưa commit. Branch chưa push; tag <code>v1.0</code> chưa được tạo/publish. Không coi các liên kết commit local là tài liệu public cho tới khi push.
+    </div>
+    <h3>Giới hạn còn lại</h3>
+    <p>Chưa có automated DB integration/clean-machine test, authentication, rate limiting, log audit, hoặc dependency audit. Chưa ghi nhận lỗi Critical còn mở trong kiểm tra tự đánh giá này; đây không phải pentest.</p>
+  </section>
+
+  <section class="page">
+    <div class="eyebrow">Mục 4 • Deployment Guide</div>
+    <h1>Hướng dẫn cài đặt và chạy</h1>
+    <h3>Yêu cầu</h3>
+    <ul>
+      <li>Docker Engine và Docker Compose v2.20 trở lên; host 64-bit.</li>
+      <li>Khoảng 2 GB dung lượng trống cho image MySQL/Node, cổng host 3000 còn trống.</li>
+      <li>Node.js 20+ nếu chạy test trên máy host. Docker dùng Node/MySQL trong container.</li>
+    </ul>
+    <h3>Khởi chạy từ thư mục gốc repository</h3>
+    <div class="box"><code>docker compose up -d --build --wait</code><br><code>docker compose ps</code></div>
+    <p>Ứng dụng: <code>http://localhost:3000</code>; liveness: <code>http://localhost:3000/health</code>; danh sách: <code>http://localhost:3000/api/tickets</code>. Ở lần đầu volume rỗng, MySQL chạy migration rồi sample seed.</p>
+    <h3>Biến cấu hình demo</h3>
+    <table class="compact">
+      <thead><tr><th>Biến</th><th>Default local</th><th>Mục đích</th></tr></thead>
+      <tbody>
+        <tr><td>PORT</td><td>3000</td><td>Cổng API host.</td></tr>
+        <tr><td>DB_HOST / DB_PORT</td><td>db / 3306</td><td>Địa chỉ MySQL trong Compose.</td></tr>
+        <tr><td>DB_NAME</td><td>mekong_crm</td><td>Tên database.</td></tr>
+        <tr><td>DB_USER / DB_PASSWORD</td><td>warranty_app / local demo</td><td>Tài khoản app nội bộ mạng Compose.</td></tr>
+        <tr><td>MYSQL_ROOT_PASSWORD</td><td>local demo</td><td>Tài khoản root MySQL trong container.</td></tr>
+      </tbody>
+    </table>
+    <h3>Kiểm tra và dừng</h3>
+    <ol>
+      <li><code>docker compose ps</code>: xác nhận api và db healthy.</li>
+      <li><code>GET /health</code>: HTTP 200, <code>{"status":"ok"}</code>; chỉ kiểm tra liveness.</li>
+      <li><code>GET /api/tickets</code>: xác nhận hai record mẫu được đọc từ MySQL.</li>
+      <li>Chạy test: <code>npm test -- --runInBand</code> (12 test tự động).</li>
+      <li>Dừng nhưng giữ dữ liệu: <code>docker compose down</code>. Không dùng <code>down -v</code> nếu muốn giữ volume.</li>
+    </ol>
+    <div class="callout"><b>Trạng thái phiên kiểm chứng:</b> API và MySQL healthy; các endpoint trả dữ liệu đúng. Docker VHDX còn ở ổ C trong khi dung lượng trống rất thấp; nên chuyển Disk image location bằng Docker Desktop trước lần build/pull tiếp theo. Không di chuyển VHDX thủ công.</div>
+    <p class="small" style="margin-top:3mm">Chưa xác nhận cài đặt trên máy hoàn toàn sạch; không có link deploy public. Mật khẩu mặc định chỉ dành cho local demo, không dùng production.</p>
+  </section>
+
+  <section class="page">
+    <div class="eyebrow">Mục 5 • Checklist bảo mật tự đánh giá</div>
+    <h1>Đánh giá 7 hạng mục</h1>
+    <p class="lead">Tự đánh giá prototype ngày 13/11/2026; không phải kết quả kiểm thử xâm nhập.</p>
+    <table class="compact">
+      <thead><tr><th>#</th><th>Hạng mục</th><th>Trạng thái</th><th>Bằng chứng / việc còn thiếu</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Không để secrets trong repository.</td><td class="ok">Đã làm</td><td><code>.env</code> được ignore; demo values nằm ở <code>.env.example</code>, không phải production secrets.</td></tr>
+        <tr><td>2</td><td>Validate input ở application layer.</td><td class="ok">Đã làm</td><td>ID số nguyên dương; mô tả 1–1.000 ký tự; T11 kiểm tra 400 và chi tiết lỗi.</td></tr>
+        <tr><td>3</td><td>Authorization/ownership.</td><td class="gap">Chưa đủ</td><td>Kiểm tra device/customer match; không có đăng nhập nên client có thể giả customer ID. Chưa phải authenticated authorization.</td></tr>
+        <tr><td>4</td><td>Mã hóa password và dữ liệu nhạy cảm.</td><td class="gap">Chưa làm</td><td>Chưa có đăng nhập; dữ liệu khách hàng chưa mã hóa at rest/transport trong demo.</td></tr>
+        <tr><td>5</td><td>Không lộ lỗi nội bộ trong response.</td><td class="ok">Đã làm</td><td>Response lỗi 500 tổng quát; không trả SQL/stack trace/connection string.</td></tr>
+        <tr><td>6</td><td>Log không chứa secrets/PII không cần thiết.</td><td class="ok">Đã làm</td><td>Log giới hạn startup và error code; không ghi request body/customer data.</td></tr>
+        <tr><td>7</td><td>Lockfile và dependency audit.</td><td class="gap">Chưa đủ</td><td>Có <code>package-lock.json</code>; chưa chạy/lưu kết quả <code>npm audit</code> cho lần nộp này.</td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:5mm">Prototype không có authentication/rate limiting, chưa cấu hình TLS hoặc mã hóa dữ liệu lưu trữ. Không expose API trực tiếp ra Internet; hoàn tất các mục còn thiếu trước khi dùng thật.</div>
+    <h3>Rủi ro ưu tiên</h3>
+    <ol>
+      <li>Bổ sung login/identity và authorization phía server thay vì tin customer ID từ client.</li>
+      <li>Đổi demo credentials bằng secret manager/env an toàn; cấu hình TLS và chính sách dữ liệu cá nhân.</li>
+      <li>Chạy dependency audit, rà soát findings và ghi nhận phiên bản/thời điểm.</li>
+    </ol>
+  </section>
+
+  <section class="page">
+    <div class="eyebrow">Mục 6 • Tài liệu kỹ thuật • SE • 1/2</div>
+    <h1>Kiến trúc và mô hình dữ liệu</h1>
+    <h3>Kiến trúc triển khai</h3>
+    <div class="diagram">
+      <div class="layer"><b>Client</b>HTML/CSS/JS<br>Tra cứu ticket</div>
+      <div class="arrow">→</div>
+      <div class="layer"><b>Express API</b>Routes + validator<br><code>/api/tickets</code></div>
+      <div class="arrow">→</div>
+      <div class="layer"><b>Service</b>Ownership + warranty<br>Business rules</div>
+      <div class="arrow">→</div>
+      <div class="layer"><b>Repository</b>Parameterized SQL<br>mysql2</div>
+    </div>
+    <div class="db"><b>MySQL 8.4</b> • Customers • Devices • Tickets • Compose persistent volume</div>
+    <p class="small">Entry point <code>app.js</code> khởi tạo connection pool và ghép repository → service → Express app. Health endpoint chỉ kiểm tra liveness, không thay thế readiness check cho DB.</p>
+    <h3>Mô hình dữ liệu (Data Dictionary)</h3>
+    <table class="compact">
+      <thead><tr><th>Entity / field</th><th>Kiểu / ràng buộc</th><th>Ý nghĩa</th></tr></thead>
+      <tbody>
+        <tr><td><b>Customers</b><br>customer_id<br>full_name<br>email</td><td>INT PK<br>VARCHAR(100) NOT NULL<br>VARCHAR(150) UNIQUE</td><td>Khách hàng đăng ký thiết bị.</td></tr>
+        <tr><td><b>Devices</b><br>device_id<br>customer_id<br>serial_number<br>purchase_date<br>warranty_months</td><td>INT PK<br>FK → Customers<br>VARCHAR(100) UNIQUE<br>DATE<br>SMALLINT UNSIGNED</td><td>Thiết bị, chủ sở hữu, serial, ngày mua và thời hạn bảo hành theo tháng.</td></tr>
+        <tr><td><b>Tickets</b><br>ticket_id<br>customer_id / device_id<br>issue_description<br>warranty_status / status<br>created_at</td><td>BIGINT PK<br>FK → Customers / Devices<br>VARCHAR(1000)<br>ENUM / ENUM<br>TIMESTAMP</td><td>Yêu cầu bảo hành; trạng thái mới là <code>Received</code>.</td></tr>
+      </tbody>
+    </table>
+    <h3>Quy tắc nghiệp vụ cốt lõi</h3>
+    <ul>
+      <li>QT-03: chỉ tiếp nhận khi device tồn tại và customer khớp chủ sở hữu.</li>
+      <li>QT-05: ngày cuối cùng của khoảng thời hạn tháng vẫn còn bảo hành; ngày sau đó hết hạn.</li>
+      <li>QT-06: mô tả không rỗng, tối đa 1.000 ký tự; ticket mới vào <code>Received</code>.</li>
+      <li>QT-07: tìm kiếm theo ticket ID, tên khách hàng hoặc serial.</li>
+    </ul>
+  </section>
+
+  <section class="page">
+    <div class="eyebrow">Mục 6 • Tài liệu kỹ thuật • SE • 2/2</div>
+    <h1>API Contract và luồng xử lý</h1>
+    <table class="compact">
+      <thead><tr><th>Method / path</th><th>Request</th><th>Success</th><th>Lỗi chính</th></tr></thead>
+      <tbody>
+        <tr><td><b>GET /health</b></td><td>Không có body.</td><td><code>200 {"status":"ok"}</code></td><td>Chỉ liveness; không chứng minh kết nối DB.</td></tr>
+        <tr><td><b>GET /api/tickets?q={text}</b></td><td><code>q</code> optional, tối đa 100 ký tự.</td><td>200; JSON array gồm ID, tên khách, serial, trạng thái bảo hành.</td><td>400 <code>INVALID_QUERY</code>; 500 <code>INTERNAL_SERVER_ERROR</code>.</td></tr>
+        <tr><td><b>POST /api/tickets</b></td><td><code>{"customer_id":1,"device_id":10,"issue_description":"Screen issue"}</code></td><td>201; ticket ID, customer/device, description, warranty status, status.</td><td>400 <code>INVALID_FORMAT</code>/<code>INVALID_JSON</code>; 404 <code>DEVICE_NOT_FOUND</code>; 500.</td></tr>
+      </tbody>
+    </table>
+    <h3>Ví dụ tạo ticket thành công</h3>
+    <div class="box"><code>{"status":"success","data":{"ticket_id":3,"customer_id":1,"device_id":10,"issue_description":"Screen issue","warranty_status":"In-Warranty","status":"Received"}}</code></div>
+    <h3>Luồng POST</h3>
+    <ol>
+      <li>Validator kiểm kiểu và giới hạn field; từ chối payload sai trước khi gọi service.</li>
+      <li>Service truy vấn device theo cả <code>device_id</code> và <code>customer_id</code>.</li>
+      <li>Tính ngày hết hạn bằng phép cộng tháng đã chặn cuối tháng; so sánh ngày lịch.</li>
+      <li>Repository insert bằng placeholder SQL; trả ID mới và trạng thái ticket.</li>
+    </ol>
+    <h3>Giới hạn contract</h3>
+    <p>Không authentication, pagination, rate limit, idempotency key, phân công kỹ thuật viên, hay endpoint cập nhật trạng thái. Search substring không phân quyền record. Các API examples trong test dùng repository giả lập; kiểm chứng MySQL được trình bày riêng ở Mục 7.</p>
+    <div class="callout"><b>Tài liệu tham chiếu trong repo:</b> <code>docs/api-contract.md</code>, <code>docs/srs.md</code>, <code>migrations/001_init_schema.sql</code>, <code>seeds/001_sample_data.sql</code>.</div>
+  </section>
+
+  <section class="page">
+    <div class="eyebrow">Mục 7 • Ảnh chụp minh chứng</div>
+    <h1>Kết quả chạy và hệ thống hoạt động</h1>
+    <p class="small">Ảnh được chụp từ lần chạy trực tiếp ngày 13/11/2026. Test output là cửa sổ PowerShell thật; các ảnh endpoint/UI là trình duyệt local đọc dữ liệu MySQL. Docker inspect xác nhận cả api và db healthy.</p>
+    <div class="evidence-grid">
+      <figure class="evidence-main"><img src="evidence-test-pass.png" alt="PowerShell output showing all 12 tests passed"><figcaption>Hình 1. <code>npm test -- --runInBand</code>: 2 suites, 12 tests PASS.</figcaption></figure>
+      <figure class="evidence-main"><img src="evidence-ui.png" alt="Warranty ticket browser UI with two database records"><figcaption>Hình 2. UI local hiển thị ticket In-Warranty và Out-of-Warranty.</figcaption></figure>
+      <figure class="evidence-small"><img src="evidence-health.png" alt="Browser output from GET health endpoint"><figcaption>Hình 3. <code>GET /health</code> trả <code>{"status":"ok"}</code>; Docker api/db healthy.</figcaption></figure>
+      <figure class="evidence-small"><img src="evidence-api-tickets.png" alt="Browser output from live ticket list API"><figcaption>Hình 4. <code>GET /api/tickets</code> trả hai record MySQL, tên tiếng Việt đúng.</figcaption></figure>
+    </div>
+    <div class="callout" style="margin-top:3mm"><b>Phạm vi chứng cứ:</b> xác nhận test tự động, Docker đang chạy và truy vấn mẫu thực. Không phải test load, pentest, CI run hoặc cài đặt trên máy hoàn toàn sạch.</div>
+  </section>
+
+  <section class="page">
+    <div class="eyebrow">Phụ lục bắt buộc • Bảng khai báo sử dụng công cụ AI</div>
+    <h1>Khai báo AI và cam kết liêm chính</h1>
+    <p><b>Học phần:</b> Chuyên đề Tốt nghiệp 1 • <b>Học kỳ:</b> HK1, năm học 2026–2027 • <b>Bài nộp:</b> BT3</p>
+    <p><b>Sinh viên:</b> Trần Tuấn Kiệt • <b>MSSV:</b> 2374802010263 • <b>Track:</b> SE • <b>Luồng:</b> L2 — Tiếp nhận và phân loại yêu cầu bảo hành.</p>
+    <table class="ai-table">
+      <thead><tr><th>Công cụ AI</th><th>Dùng vào việc gì</th><th>Phần áp dụng</th><th>Đã kiểm chứng / chỉnh sửa thế nào</th></tr></thead>
+      <tbody>
+        <tr><td><b>Gemini</b></td><td>Gợi ý cấu trúc Node.js, health endpoint; soát chính tả và định dạng tài liệu.</td><td><code>app.js</code>, <code>src/index.js</code>, README, SRS.</td><td>Đã chạy server/API và đọc soát thông tin sinh viên, nội dung L2.</td></tr>
+        <tr><td><b>Copilot SDK in VS Code</b></td><td>Rà soát L2; nối route/service/repository; hỗ trợ unit/API tests, Docker và hồ sơ BT3.</td><td><code>src/</code>, <code>tests/</code>, Docker, migration/seed, docs BT3.</td><td>12/12 test PASS; Compose API/MySQL healthy; kiểm tra GET health/tickets và sửa charset seed. Automated API tests không gọi DB thật.</td></tr>
+      </tbody>
+    </table>
+    <h3>Cam kết</h3>
+    <div class="box">“Tôi xác nhận đã đọc, hiểu và chịu trách nhiệm về toàn bộ nội dung nộp.”</div>
+    <p class="signature"><b>Chữ ký / họ tên sinh viên:</b> Trần Tuấn Kiệt ____________________<br><b>Ngày khai báo:</b> 13/11/2026</p>
+    <p class="small">Sinh viên cần đọc lại và chỉnh mọi chi tiết chưa chính xác trước khi ký/nộp. Tag v1.0 cần được tạo và publish riêng; báo cáo hiện ghi rõ tag chưa tồn tại để tránh tạo thông tin sai.</p>
+  </section>
+</body>
+</html>

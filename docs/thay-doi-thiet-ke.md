@@ -8,11 +8,9 @@
    Vì sao: Đảm bảo không trùng lặp thông tin thiết bị/khách hàng khi tiếp nhận phiếu bảo hành và hỗ trợ quy tắc QT-03.
    Ảnh hưởng tới thành phần nào: Tệp `migrations/001_init_schema.sql` và `seeds/001_sample_data.sql`.
 
-3. **Việc cần đối chiếu:** Nhật ký cũ ghi đã bổ sung ERD (`erd.drawio`), nhưng
-   tệp này hiện không có trong repo. Không xem nội dung đó là minh chứng hoàn
-   thành; cần bổ sung hoặc sửa nhật ký trước khi nộp. Ngoài ra, `architecture.drawio`
-   và `usecase.drawio` hiện vẫn mô tả quản lý đơn hàng, không phải nghiệp vụ L2
-   bảo hành; cần cập nhật chúng trước khi đưa các sơ đồ vào bản PDF BT3.
+3. **Giới hạn tài liệu:** Nhật ký cũ có nhắc ERD (`erd.drawio`), nhưng tệp
+   này không có trong repo. Các sơ đồ `architecture.drawio` và `usecase.drawio`
+   còn nội dung từ luồng đơn hàng; không sử dụng chúng làm minh chứng BT3.
 
 ## Thay đổi trong Bài tập 3 (so với Bài tập 2)
 
@@ -38,8 +36,12 @@
    `docs/bug-log.md`, `docs/deployment-guide.md`,
    `docs/checklist-bao-mat.md`, `docs/api-contract.md`.
 
-4. **Giới hạn xác minh:** `npm test -- --runInBand` đã chạy trong môi trường
-   hiện tại. Docker chưa cài trên máy này nên phép thử dựng MySQL từ môi
-   trường sạch chưa được thực hiện; Bug Log ghi nhận rõ phần còn thiếu.
-   Các thay đổi Bài tập 3 chưa được commit, vì vậy Bug Log chưa có commit
-   links và chưa thể được xem là bản nộp hoàn chỉnh.
+4. **Xác minh:** `npm test -- --runInBand` đạt 12/12. Docker Compose đã chạy
+   thực tế: API và MySQL healthy; `/health` trả HTTP 200 và `/api/tickets`
+   đọc được hai bản ghi. Automated API tests vẫn dùng repository giả lập.
+   Các thay đổi BT3 nằm trong commit local; chúng chưa được push. Tag `v1.0`
+   chưa được tạo/publish.
+
+5. **Sửa dữ liệu mẫu:** Khai báo charset `utf8mb4` trong seed để tên tiếng
+   Việt được lưu chính xác; đã kiểm tra nhập seed vào schema MySQL trống và
+   đọc danh sách từ giao diện Docker đang chạy.

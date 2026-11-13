@@ -1,3 +1,5 @@
+SET NAMES utf8mb4;
+
 INSERT INTO Customers (customer_id, full_name, email) VALUES
 (1, 'Trần Tuấn Kiệt', 'tuankiet@gmail.com'),
 (2, 'Nguyễn Văn A', 'nguyenvana@gmail.com')

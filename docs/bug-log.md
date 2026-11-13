@@ -1,8 +1,10 @@
 # L2 Warranty Ticket — Bug Log
 
-The following defects were identified by inspecting the prototype against the
-L2 requirements and corrected in the implementation commit. Regression tests
-were added after the fixes; no failing pre-fix test run was recorded.
+The first four defects were identified by inspecting the prototype against
+the L2 requirements and corrected in the implementation commit. A fifth
+sample-data encoding defect was found during the live Docker smoke check and
+corrected in a follow-up seed change. Regression tests were added after the
+original fixes; no failing pre-fix test run was recorded.
 The fixes are included in [commit 13456e085e0d427dff8bcc131456a3087046c39f](https://github.com/Tuankiet39/cdtn1-trantuankiet-l2/commit/13456e085e0d427dff8bcc131456a3087046c39f).
 This commit is local and has not been pushed; the public link will resolve
 only after publishing it to the repository.
@@ -47,7 +49,7 @@ only after publishing it to the repository.
   order-management flow.
 - **Fix:** Replace the migration and idempotent sample data with the L2
   customer/device/ticket schema.
-- **Commit and verification:** [13456e085e0d427dff8bcc131456a3087046c39f](https://github.com/Tuankiet39/cdtn1-trantuankiet-l2/commit/13456e085e0d427dff8bcc131456a3087046c39f). Service/API tests use a repository double; live MySQL verification remains pending because Docker is unavailable in this environment.
+- **Commit and verification:** [13456e085e0d427dff8bcc131456a3087046c39f](https://github.com/Tuankiet39/cdtn1-trantuankiet-l2/commit/13456e085e0d427dff8bcc131456a3087046c39f). Service/API tests use a repository double; a separate Docker smoke check confirmed MySQL initialization and reads from `/api/tickets`.
 
 ## BUG-04 — Major: Warranty boundary misclassified the final covered day
 
@@ -62,3 +64,17 @@ only after publishing it to the repository.
 - **Fix:** Clamp month arithmetic to the target month's last day and compare
   date-only values.
 - **Commit and verification:** [13456e085e0d427dff8bcc131456a3087046c39f](https://github.com/Tuankiet39/cdtn1-trantuankiet-l2/commit/13456e085e0d427dff8bcc131456a3087046c39f). Verified by T03 and T04.
+
+## BUG-05 — Major: Vietnamese sample names were corrupted on MySQL import
+
+- **Symptom:** The live ticket list displayed customer names as mojibake even
+  though the seed file was UTF-8.
+- **Root cause:** The SQL import did not explicitly set its connection
+  character set before reading non-ASCII literals.
+- **Fix:** Set the seed session to `utf8mb4` and re-apply the seed to the
+  existing Docker database.
+- **Verification:** Imported the seed into an isolated fresh MySQL schema using
+  a non-UTF-8 client setting; confirmed the stored UTF-8 bytes and refreshed
+  the live UI. Names display as `Trần Tuấn Kiệt` and `Nguyễn Văn A`.
+- **Regression coverage:** Manual live MySQL smoke check; no automated
+  character-set integration test is included in T01–T12.

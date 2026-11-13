@@ -78,6 +78,12 @@ empty.
 ## Operational limits
 
 The API has no authentication and must not be exposed as a production service.
-The health endpoint does not test database connectivity. Database-backed
-startup and white-box deployment still need to be verified on a machine with
-Docker.
+The health endpoint does not test database connectivity. The 2026-11-13
+deployment smoke check confirmed both Compose services healthy, HTTP 200 from
+`/health`, and two MySQL-backed records from `/api/tickets`; this is not a
+load, security, or automated database integration test.
+
+On the verification machine, Docker's WSL disk image still resides on C: and
+the system drive has very little free space. Move Docker Desktop's disk image
+to a drive with sufficient space before rebuilding or pulling more images.
+Do not manually move the VHDX or remove Compose volumes.

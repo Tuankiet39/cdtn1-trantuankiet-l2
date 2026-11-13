@@ -4,9 +4,15 @@
 
 **Command:** `npm test -- --runInBand`
 
-**Environment:** Node.js, Jest, Supertest; no live MySQL or Docker container
+**Automated environment:** Node.js, Jest, Supertest; API tests use an
+in-memory repository and do not call MySQL.
 
 **Result:** 2 suites passed; 12 tests passed; 0 failed.
+
+**Separate deployment smoke check:** On the same date, Docker Compose reported
+both `api` and `db` containers healthy. `GET /health` returned HTTP 200 with
+`{"status":"ok"}` and `GET /api/tickets` returned the two MySQL seed records.
+This manual check is deployment evidence, not an additional automated test.
 
 | ID | Preconditions | Steps | Test data | Expected result | Priority | Actual result | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -23,5 +29,7 @@
 | T11 | API is available. | POST an invalid customer ID and empty description. | Customer ID `"1"`, device 10, empty description. | HTTP 400 `INVALID_FORMAT`, field errors present, no create. | High | HTTP 400; `customer_id` and `issue_description` errors returned. | PASS |
 | T12 | Device 10 belongs to customer 1. | POST device 10 under customer 2. | Customer 2, device 10. | HTTP 404 `DEVICE_NOT_FOUND`; response does not disclose serial number. | High | HTTP 404; response contained no serial number. | PASS |
 
-These are automated unit/API results only. They are not evidence of a live
-database integration test, browser test, or white-box Docker run.
+T01–T12 are automated unit/API results. They are not database integration
+tests. The separate smoke check above verifies a live Compose deployment and
+sample-data read; it does not cover browser automation, load, or security
+penetration testing.
