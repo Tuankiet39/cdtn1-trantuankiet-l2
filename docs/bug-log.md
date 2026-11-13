@@ -1,11 +1,11 @@
 # L2 Warranty Ticket — Bug Log
 
 The following defects were identified by inspecting the prototype against the
-L2 requirements and corrected in the current working tree. Regression tests
+L2 requirements and corrected in the implementation commit. Regression tests
 were added after the fixes; no failing pre-fix test run was recorded.
-**The fixes have not been committed yet**, so valid commit links cannot be
-supplied at this point. Do not treat the commit-link requirement as complete
-until a commit is created and each entry is linked to it.
+The fixes are included in [commit 13456e085e0d427dff8bcc131456a3087046c39f](https://github.com/Tuankiet39/cdtn1-trantuankiet-l2/commit/13456e085e0d427dff8bcc131456a3087046c39f).
+This commit is local and has not been pushed; the public link will resolve
+only after publishing it to the repository.
 
 ## BUG-01 — Critical: Application entry point did not expose the L2 API
 
@@ -20,8 +20,7 @@ until a commit is created and each entry is linked to it.
   route.
 - **Fix:** Wire the root entry point to `TicketRepository`, `TicketService`,
   and the Express app factory; serve the L2 UI and ticket routes.
-- **Commit and verification:** Commit link pending (uncommitted working-tree
-  change). Verified by T08 and T10 in `npm test -- --runInBand`.
+- **Commit and verification:** [13456e085e0d427dff8bcc131456a3087046c39f](https://github.com/Tuankiet39/cdtn1-trantuankiet-l2/commit/13456e085e0d427dff8bcc131456a3087046c39f). Verified by T08 and T10 in `npm test -- --runInBand`.
 
 ## BUG-02 — Major: Ticket route still accepted order-shaped requests
 
@@ -34,8 +33,7 @@ until a commit is created and each entry is linked to it.
   domain refactor.
 - **Fix:** Replace the order endpoints with `GET /api/tickets` and
   `POST /api/tickets`, and validate customer, device, and issue fields.
-- **Commit and verification:** Commit link pending (uncommitted working-tree
-  change). Verified by T08–T12.
+- **Commit and verification:** [13456e085e0d427dff8bcc131456a3087046c39f](https://github.com/Tuankiet39/cdtn1-trantuankiet-l2/commit/13456e085e0d427dff8bcc131456a3087046c39f). Verified by T08–T12.
 
 ## BUG-03 — Major: Database tables did not match the ticket repository
 
@@ -49,9 +47,7 @@ until a commit is created and each entry is linked to it.
   order-management flow.
 - **Fix:** Replace the migration and idempotent sample data with the L2
   customer/device/ticket schema.
-- **Commit and verification:** Commit link pending (uncommitted working-tree
-  change). Service/API tests use a repository double; live MySQL verification
-  remains pending because Docker is unavailable in this environment.
+- **Commit and verification:** [13456e085e0d427dff8bcc131456a3087046c39f](https://github.com/Tuankiet39/cdtn1-trantuankiet-l2/commit/13456e085e0d427dff8bcc131456a3087046c39f). Service/API tests use a repository double; live MySQL verification remains pending because Docker is unavailable in this environment.
 
 ## BUG-04 — Major: Warranty boundary misclassified the final covered day
 
@@ -65,5 +61,4 @@ until a commit is created and each entry is linked to it.
   full timestamps rather than calendar dates.
 - **Fix:** Clamp month arithmetic to the target month's last day and compare
   date-only values.
-- **Commit and verification:** Commit link pending (uncommitted working-tree
-  change). Verified by T03 and T04.
+- **Commit and verification:** [13456e085e0d427dff8bcc131456a3087046c39f](https://github.com/Tuankiet39/cdtn1-trantuankiet-l2/commit/13456e085e0d427dff8bcc131456a3087046c39f). Verified by T03 and T04.
